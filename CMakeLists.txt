@@ -190,6 +190,7 @@ if(RAPIDJSON_BUILD_TESTS)
     include(CTest)
 endif()
 
+if (NOT SKBUILD) # ITK-Wasm
 # pkg-config
 IF (UNIX OR CYGWIN)
   CONFIGURE_FILE (${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.in
@@ -203,12 +204,14 @@ ENDIF()
 install(FILES readme.md
         DESTINATION "${DOC_INSTALL_DIR}"
         COMPONENT doc)
+endif() # ITK-Wasm
 
 # Add an interface target to export it
 add_library(RapidJSON INTERFACE)
 
 target_include_directories(RapidJSON INTERFACE $<INSTALL_INTERFACE:include/rapidjson>)
 
+if (NOT SKBUILD) # ITK-Wasm
 install(DIRECTORY include/rapidjson
     DESTINATION "${INCLUDE_INSTALL_DIR}"
     COMPONENT dev)
@@ -221,6 +224,7 @@ install(DIRECTORY example/
     PATTERN "CMakeFiles" EXCLUDE
     PATTERN "Makefile" EXCLUDE
     PATTERN "cmake_install.cmake" EXCLUDE)
+endif()
 
 # Provide config and version files to be used by other applications
 # ===============================
@@ -249,6 +253,7 @@ SET( CONFIG_DIR )
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake @ONLY )
 
+if (NOT SKBUILD) # ITK-Wasm
 INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
         DESTINATION ${CMAKECONFIG_INSTALL_DIR} )
 
@@ -263,3 +268,4 @@ IF(CMAKE_INSTALL_DIR)
     INSTALL(TARGETS RapidJSON EXPORT RapidJSON-targets)
     INSTALL(EXPORT RapidJSON-targets DESTINATION ${CMAKE_INSTALL_DIR})
 ENDIF()
+endif() # ITK-Wasm
